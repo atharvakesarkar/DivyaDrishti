@@ -28,9 +28,7 @@
 3. Open `index.html` in any browser  
 4. Click map layer buttons to switch views (Pollution / Clouds / Temperature)  
 
-📸 Screenshot
-
-![Dashboard Screenshot](preview.png)
+              
 
 🧠 Inspiration
 
