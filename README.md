@@ -23,7 +23,7 @@
 
 📦 How to Use
 
-1. Clone the repo or [Download ZIP](https://github.com/your-username/DivyaDrishti/archive/refs/heads/main.zip)  
+1. Clone the repo or [[Download ZIP](https://github.com/your-username/DivyaDrishti/archive/refs/heads/main.zip)  ](https://github.com/atharvakesarkar/DivyaDrishti)
 2. Replace your OpenWeatherMap API key inside `script.js`  
 3. Open `index.html` in any browser  
 4. Click map layer buttons to switch views (Pollution / Clouds / Temperature)  
