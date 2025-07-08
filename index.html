@@ -4,7 +4,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Divyadrishti</title>
-        <link rel="icon" type="image/png" href="my/images/divyadrishti_eye_only.png" />
+        <link rel="icon" type="image/png"
+            href="my/images/divyadrishti_eye_only.png" />
         <meta name="description"
             content="Real-time Air Quality Monitoring System">
         <link rel="icon"
@@ -18,11 +19,14 @@
         <link rel="stylesheet"
             href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-          <!-- Load Botpress Webchat SDK -->
-  <script src="https://cdn.botpress.cloud/webchat/v3.1/inject.js" defer></script>
+        <!-- Load Botpress Webchat SDK -->
+        <script src="https://cdn.botpress.cloud/webchat/v3.1/inject.js"
+            defer></script>
 
-  <!-- Load Your Config JS (this file contains your bot ID, style, etc.) -->
-  <script src="https://files.bpcontent.cloud/2025/07/08/08/20250708082833-L9U4CQ8H.js" defer></script>
+        <!-- Load Your Config JS (this file contains your bot ID, style, etc.) -->
+        <script
+            src="https://files.bpcontent.cloud/2025/07/08/08/20250708082833-L9U4CQ8H.js"
+            defer></script>
 
     </head>
     <body>
@@ -260,15 +264,21 @@
                     <main class="main-content container">
                         <section class="aqi-main-card">
                             <div class="aqi-header">
-                                <h2>🧠AQI Predictor</h2>
+                                <h2>🧠 AQI Predictor</h2>
                             </div>
                             <div class="form-group">
-                                <label>Month (1–12): <input type="number"
-                                        id="month" min="1" max="12"></label><br>
-                                <label>Date (1–31): <input type="number"
-                                        id="date" min="1" max="31"></label><br>
-                                <label>Hour (0–23): <input type="number"
-                                        id="hour" min="0" max="23"></label><br>
+                                <label>Month (1–12):
+                                    <input type="number" id="month" min="1"
+                                        max="12">
+                                </label><br>
+                                <label>Date (1–31):
+                                    <input type="number" id="date" min="1"
+                                        max="31">
+                                </label><br>
+                                <label>Hour (0–23):
+                                    <input type="number" id="hour" min="0"
+                                        max="23">
+                                </label><br>
                                 <button onclick="getPrediction()">Predict
                                     AQI</button>
                             </div>
@@ -353,8 +363,6 @@
                 </div>
             </main>
 
- 
-
             <!-- Footer -->
             <footer class="footer">
                 <div class="container">
@@ -368,6 +376,33 @@
                     </div>
                 </div>
             </footer>
+            
+    <script>
+        // predications
+        function getPrediction() {
+            const month = parseInt(document.getElementById("month").value);
+            const date = parseInt(document.getElementById("date").value);
+            const hour = parseInt(document.getElementById("hour").value);
+
+            fetch("http://127.0.0.1:5000/predict", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ month, date, hour }),
+            })
+            .then(response => response.json())
+            .then(result => {
+                document.getElementById("result").innerHTML =
+                    `<div>✅ Predicted AQI: ${result.predicted_AQI}</div>`;
+            })
+            .catch(error => {
+                document.getElementById("result").innerHTML =
+                    `<div style="color:red">❌ Backend not responding. Check Flask server.</div>`;
+                console.error("Fetch Error:", error);
+            });
+        }
+    </script>
 
             <script src="my/script.js"></script>
         </body>
