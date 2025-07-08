@@ -723,3 +723,84 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+
+
+
+
+// chat bott
+const openai_api_key = " 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"; // Replace this with your actual OpenAI API key
+
+function toggleChatbot() {
+  const box = document.getElementById("chatbotBox");
+  box.style.display = box.style.display === "none" ? "flex" : "none";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.getElementById("chatInput");
+  const chatMessages = document.getElementById("chatMessages");
+
+  input.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+      const userText = input.value.trim();
+      if (userText) {
+        appendMessage(userText, 'user');
+        getBotResponse(userText);
+        input.value = "";
+      }
+    }
+  });
+
+  function appendMessage(text, sender) {
+    const msg = document.createElement("div");
+    msg.classList.add("message");
+
+    if (sender === 'user') {
+      msg.classList.add("user-message");
+      msg.textContent = `You: ${text}`;
+    } else {
+      msg.classList.add("bot-message");
+      msg.textContent = `DivyaBot: ${text}`;
+    }
+
+    chatMessages.appendChild(msg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  async function getBotResponse(userMessage) {
+    appendMessage("Typing...", 'bot');
+
+    try {
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${openai_api_key}`
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [
+            { role: "system", content: "You are a helpful assistant named DivyaBot." },
+            { role: "user", content: userMessage }
+          ],
+          temperature: 0.7
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("API response was not ok");
+      }
+
+      const data = await response.json();
+      const botReply = data.choices[0].message.content.trim();
+
+      chatMessages.lastChild.remove(); // Remove "Typing..."
+      appendMessage(botReply, 'bot');
+
+    } catch (error) {
+      console.error("Error:", error);
+      chatMessages.lastChild.remove();
+      appendMessage("❌ Error in response. Please try again.", 'bot');
+    }
+  }
+});
