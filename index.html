@@ -1,305 +1,373 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divyadrishti</title>
-    <meta name="description" content="Real-time Air Quality Monitoring System">
-    <link rel="icon" href="/lovable-uploads/60365848-6929-4d7d-9ef1-5aeb5bd9cbb9.png" type="image/png">
-    <link rel="stylesheet" href="my/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Divyadrishti</title>
+        <meta name="description"
+            content="Real-time Air Quality Monitoring System">
+        <link rel="icon"
+            href="/lovable-uploads/60365848-6929-4d7d-9ef1-5aeb5bd9cbb9.png"
+            type="image/png">
+        <link rel="stylesheet" href="my/style.css">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <link rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+          <!-- Load Botpress Webchat SDK -->
+  <script src="https://cdn.botpress.cloud/webchat/v3.1/inject.js" defer></script>
 
-  
+  <!-- Load Your Config JS (this file contains your bot ID, style, etc.) -->
+  <script src="https://files.bpcontent.cloud/2025/07/08/08/20250708082833-L9U4CQ8H.js" defer></script>
 
-</head>
-<body>
-    <div class="app">
-        <!-- Header -->
-        <header class="header">
-            <div class="container">
-                <div class="header-content">
-                    <div class="logo-section">
-                        <div class="logo-container">
-                            <img src="my/images/divyadrishti_eye_only.png" alt="Divyadrishti Logo" class="logo-image">
-                        </div>
-                        <div class="logo-text">
-                            <h1 class="app-title">Divyadrishti</h1>
-                            <p class="app-subtitle">Divine Vision for Air Quality Monitoring</p>
-                        </div>
-                    </div>
-                    
-                    <div class="header-controls">
-                        <div class="status-info">
-                            <div class="status-item">
-                                <span class="status-label">Last updated:</span>
-                                <span id="lastUpdated">12:34 PM</span>
+    </head>
+    <body>
+        <div class="app">
+            <!-- Header -->
+            <header class="header">
+                <div class="container">
+                    <div class="header-content">
+                        <div class="logo-section">
+                            <div class="logo-container">
+                                <img src="/my/images/divyadrishti_eye_only.png"
+                                    alt="Divyadrishti Logo" class="logo-image">
                             </div>
-                            <div class="status-item">
-                                <span class="status-label">Location:</span>
-                                <span id="currentLocation">Delhi</span>
+                            <div class="logo-text">
+                                <h1 class="app-title">Divyadrishti</h1>
+                                <p class="app-subtitle">Divine Vision for Air
+                                    Quality Monitoring</p>
                             </div>
                         </div>
-                        <div class="control-buttons">
-                            <button id="languageToggle" class="btn-secondary">EN</button>
-                            <button id="refreshBtn" class="btn-secondary">
-                                <span class="refresh-icon">↻</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="container">
-                <!-- Location Search -->
-                <div class="search-section">
-                    <div class="search-container">
-                        <input type="text" id="locationInput" placeholder="Search for a city..." class="location-input">
-                        <button id="searchBtn" class="btn-primary">Search</button>
-                    </div>
-                </div>
-
-                <!-- AQI Dashboard -->
-                <div class="dashboard-grid">
-                    <!-- Main AQI Card -->
-                    <div class="aqi-main-card">
-                        <div class="aqi-header">
-                            <h2>Air Quality Index</h2>
-                            <div class="aqi-status" id="aqiStatus">Good</div>
-                        </div>
-                        <div class="aqi-value">
-                            <span class="aqi-number" id="aqiNumber">45</span>
-                            <span class="aqi-unit">AQI</span>
-                        </div>
-                        <div class="aqi-description" id="aqiDescription">
-                            Air quality is considered satisfactory, and air pollution poses little or no risk.
-                        </div>
-                        <div class="pollutant-details">
-                            <div class="pollutant-item">
-                                <span class="pollutant-name">PM2.5</span>
-                                <span class="pollutant-value" id="pm25">12 µg/m³</span>
-                            </div>
-                            <div class="pollutant-item">
-                                <span class="pollutant-name">PM10</span>
-                                <span class="pollutant-value" id="pm10">24 µg/m³</span>
-                            </div>
-                            <div class="pollutant-item">
-                                <span class="pollutant-name">O3</span>
-                                <span class="pollutant-value" id="o3">89 µg/m³</span>
-                            </div>
-                            <div class="pollutant-item">
-                                <span class="pollutant-name">NO2</span>
-                                <span class="pollutant-value" id="no2">32 µg/m³</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Health Recommendations -->
-                    <div class="health-card">
-                        <h3>Health Recommendations</h3>
-                        <div class="recommendation-list" id="recommendations">
-                            <div class="recommendation-item">
-                                <span class="rec-icon">👍</span>
-                                <span>Perfect for outdoor activities</span>
-                            </div>
-                            <div class="recommendation-item">
-                                <span class="rec-icon">🚶</span>
-                                <span>Ideal for jogging and exercise</span>
-                            </div>
-                            <div class="recommendation-item">
-                                <span class="rec-icon">🌱</span>
-                                <span>No health precautions needed</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Charts Section -->
-                <div class="charts-section">
-                    <div class="chart-container">
-                        <h3>Pollutant Levels</h3>
-                        <div class="chart-placeholder">
-                            <canvas id="pollutantChart" width="400" height="250"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-container">
-                        <h3>Pollutant Distribution</h3>
-                        <div class="chart-placeholder">
-                            <canvas id="distributionChart" width="400" height="250"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Satellite View Section -->
-                <div class="satellite-section">
-                    <div class="satellite-container">
-                        <div class="satellite-header">
-                            <div class="satellite-title">
-                                <span class="satellite-icon">🛰️</span>
-                                <h3>Satellite View</h3>
-                            </div>
-                            <div class="satellite-controls">
-                                <button class="layer-btn active" data-layer="pollution">
-                                    <span class="layer-icon">🛰️</span>
-                                    Pollution
-                                </button>
-                                <button class="layer-btn" data-layer="clouds">
-                                    <span class="layer-icon">☁️</span>
-                                    Cloud Cover
-                                </button>
-                                <button class="layer-btn" data-layer="temperature">
-                                    <span class="layer-icon">🌡️</span>
-                                    Temperature
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="satellite-content">
-                          <div id="mapContainer" style="width: 100%; height: 400px; border-radius: 1rem; margin-top: 1rem;"></div>
-                            <div class="satellite-map">
-                                <div class="map-placeholder">
-                                    <div class="map-overlay">
-                                        <span class="globe-icon">🌍</span>
-                                        <p class="map-title">Satellite Map View</p>
-                                        <p class="map-subtitle" id="mapLocation">Delhi - Pollution Layer</p>
-                                    </div>
-                                    <div class="data-overlay">
-                                        <p class="data-label">Current Reading</p>
-                                        <p class="data-value" id="satelliteReading">45%</p>
-                                    </div>
+                        <div class="header-controls">
+                            <div class="status-info">
+                                <div class="status-item">
+                                    <span class="status-label">Last
+                                        updated:</span>
+                                    <span id="lastUpdated">12:34 PM</span>
+                                </div>
+                                <div class="status-item">
+                                    <span class="status-label">Location:</span>
+                                    <span id="currentLocation">Delhi</span>
                                 </div>
                             </div>
-                            
-                            <div class="satellite-data">
-                                <div class="data-panel">
-                                    <h4>Satellite Data Metrics</h4>
-                                    <div class="metric-item">
-                                        <span class="metric-label">Pollution Index</span>
-                                        <span class="metric-value pollution" id="pollutionIndex">45%</span>
-                                    </div>
-                                    <div class="metric-item">
-                                        <span class="metric-label">Cloud Cover</span>
-                                        <span class="metric-value clouds" id="cloudCover">60%</span>
-                                    </div>
-                                    <div class="metric-item">
-                                        <span class="metric-label">Surface Temperature</span>
-                                        <span class="metric-value temperature" id="surfaceTemp">28°C</span>
-                                    </div>
+                            <div class="control-buttons">
+                                <button id="languageToggle"
+                                    class="btn-secondary">EN</button>
+                                <button id="refreshBtn" class="btn-secondary">
+                                    <span class="refresh-icon">↻</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <div class="container">
+                    <!-- Location Search -->
+                    <div class="search-section">
+                        <div class="search-container">
+                            <input type="text" id="locationInput"
+                                placeholder="Search for a city..."
+                                class="location-input">
+                            <button id="searchBtn"
+                                class="btn-primary">Search</button>
+                        </div>
+                    </div>
+
+                    <!-- AQI Dashboard -->
+                    <div class="dashboard-grid">
+                        <!-- Main AQI Card -->
+                        <div class="aqi-main-card">
+                            <div class="aqi-header">
+                                <h2>Air Quality Index</h2>
+                                <div class="aqi-status"
+                                    id="aqiStatus">Good</div>
+                            </div>
+                            <div class="aqi-value">
+                                <span class="aqi-number"
+                                    id="aqiNumber">45</span>
+                                <span class="aqi-unit">AQI</span>
+                            </div>
+                            <div class="aqi-description" id="aqiDescription">
+                                Air quality is considered satisfactory, and air
+                                pollution poses little or no risk.
+                            </div>
+                            <div class="pollutant-details">
+                                <div class="pollutant-item">
+                                    <span class="pollutant-name">PM2.5</span>
+                                    <span class="pollutant-value" id="pm25">12
+                                        µg/m³</span>
                                 </div>
-                                
-                                <div class="data-sources">
-                                    <h4>Data Sources</h4>
-                                    <div class="source-list">
-                                        <div class="source-dot green"></div>
-                                        <span>NASA MODIS Satellite</span>
-                                    </div>
-                                    <div class="source-list">
-                                        <div class="source-dot blue"></div>
-                                        <span>ISRO INSAT-3D</span>
-                                    </div>
-                                    <div class="source-list">
-                                        <div class="source-dot yellow"></div>
-                                        <span>Sentinel-5P ESA</span>
-                                    </div>
+                                <div class="pollutant-item">
+                                    <span class="pollutant-name">PM10</span>
+                                    <span class="pollutant-value" id="pm10">24
+                                        µg/m³</span>
+                                </div>
+                                <div class="pollutant-item">
+                                    <span class="pollutant-name">O3</span>
+                                    <span class="pollutant-value" id="o3">89
+                                        µg/m³</span>
+                                </div>
+                                <div class="pollutant-item">
+                                    <span class="pollutant-name">NO2</span>
+                                    <span class="pollutant-value" id="no2">32
+                                        µg/m³</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Health Recommendations -->
+                        <div class="health-card">
+                            <h3>Health Recommendations</h3>
+                            <div class="recommendation-list"
+                                id="recommendations">
+                                <div class="recommendation-item">
+                                    <span class="rec-icon">👍</span>
+                                    <span>Perfect for outdoor activities</span>
+                                </div>
+                                <div class="recommendation-item">
+                                    <span class="rec-icon">🚶</span>
+                                    <span>Ideal for jogging and exercise</span>
+                                </div>
+                                <div class="recommendation-item">
+                                    <span class="rec-icon">🌱</span>
+                                    <span>No health precautions needed</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- 24-Hour Trend Chart -->
-                <div class="trend-section">
-                    <div class="trend-container">
-                        <h3>24-Hour AQI Trend</h3>
-                        <div class="chart-placeholder">
-                            <canvas id="trendChart" width="800" height="300"></canvas>
+                    <!-- Charts Section -->
+                    <div class="charts-section">
+                        <div class="chart-container">
+                            <h3>Pollutant Levels</h3>
+                            <div class="chart-placeholder">
+                                <canvas id="pollutantChart" width="400"
+                                    height="250"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-container">
+                            <h3>Pollutant Distribution</h3>
+                            <div class="chart-placeholder">
+                                <canvas id="distributionChart" width="400"
+                                    height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Satellite View Section -->
+                    <div class="satellite-section">
+                        <div class="satellite-container">
+                            <div class="satellite-header">
+                                <div class="satellite-title">
+                                    <span class="satellite-icon">🛰️</span>
+                                    <h3>Satellite View</h3>
+                                </div>
+                                <div class="satellite-controls">
+                                    <button class="layer-btn active"
+                                        data-layer="pollution">
+                                        <span class="layer-icon">🛰️</span>
+                                        Pollution
+                                    </button>
+                                    <button class="layer-btn"
+                                        data-layer="clouds">
+                                        <span class="layer-icon">☁️</span>
+                                        Cloud Cover
+                                    </button>
+                                    <button class="layer-btn"
+                                        data-layer="temperature">
+                                        <span class="layer-icon">🌡️</span>
+                                        Temperature
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="satellite-content">
+                                <div id="mapContainer"
+                                    style="width: 100%; height: 400px; border-radius: 1rem; margin-top: 1rem;"></div>
+                                <div class="satellite-map">
+                                    <div class="map-placeholder">
+                                        <div class="map-overlay">
+                                            <span class="globe-icon">🌍</span>
+                                            <p class="map-title">Satellite Map
+                                                View</p>
+                                            <p class="map-subtitle"
+                                                id="mapLocation">Delhi -
+                                                Pollution Layer</p>
+                                        </div>
+                                        <div class="data-overlay">
+                                            <p class="data-label">Current
+                                                Reading</p>
+                                            <p class="data-value"
+                                                id="satelliteReading">45%</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="satellite-data">
+                                    <div class="data-panel">
+                                        <h4>Satellite Data Metrics</h4>
+                                        <div class="metric-item">
+                                            <span class="metric-label">Pollution
+                                                Index</span>
+                                            <span class="metric-value pollution"
+                                                id="pollutionIndex">45%</span>
+                                        </div>
+                                        <div class="metric-item">
+                                            <span class="metric-label">Cloud
+                                                Cover</span>
+                                            <span class="metric-value clouds"
+                                                id="cloudCover">60%</span>
+                                        </div>
+                                        <div class="metric-item">
+                                            <span class="metric-label">Surface
+                                                Temperature</span>
+                                            <span
+                                                class="metric-value temperature"
+                                                id="surfaceTemp">28°C</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="data-sources">
+                                        <h4>Data Sources</h4>
+                                        <div class="source-list">
+                                            <div class="source-dot green"></div>
+                                            <span>NASA MODIS Satellite</span>
+                                        </div>
+                                        <div class="source-list">
+                                            <div class="source-dot blue"></div>
+                                            <span>ISRO INSAT-3D</span>
+                                        </div>
+                                        <div class="source-list">
+                                            <div
+                                                class="source-dot yellow"></div>
+                                            <span>Sentinel-5P ESA</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <main class="main-content container">
+                        <section class="aqi-main-card">
+                            <div class="aqi-header">
+                                <h2>🧠AQI Predictor</h2>
+                            </div>
+                            <div class="form-group">
+                                <label>Month (1–12): <input type="number"
+                                        id="month" min="1" max="12"></label><br>
+                                <label>Date (1–31): <input type="number"
+                                        id="date" min="1" max="31"></label><br>
+                                <label>Hour (0–23): <input type="number"
+                                        id="hour" min="0" max="23"></label><br>
+                                <button onclick="getPrediction()">Predict
+                                    AQI</button>
+                            </div>
+                            <div id="result" style="margin-top: 20px;"></div>
+                        </section>
+                    </main>
+
+                    <!-- 24-Hour Trend Chart -->
+                    <div class="trend-section">
+                        <div class="trend-container">
+                            <h3>24-Hour AQI Trend</h3>
+                            <div class="chart-placeholder">
+                                <canvas id="trendChart" width="800"
+                                    height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Info Cards -->
+                    <div class="info-cards">
+                        <div class="info-card">
+                            <div class="info-icon">⚡</div>
+                            <div class="info-content">
+                                <div class="info-label">Real-time Data</div>
+                                <div class="info-value">Live Updates</div>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-icon">🛰️</div>
+                            <div class="info-content">
+                                <div class="info-label">Satellite Data</div>
+                                <div class="info-value">NASA/ISRO</div>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-icon">📍</div>
+                            <div class="info-content">
+                                <div class="info-label">Coverage</div>
+                                <div class="info-value">India-wide</div>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-icon">🕐</div>
+                            <div class="info-content">
+                                <div class="info-label">Update Frequency</div>
+                                <div class="info-value">Every 10 min</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AQI Scale Reference -->
+                    <div class="aqi-scale-card">
+                        <h3>AQI Scale Reference</h3>
+                        <div class="aqi-scale-grid">
+                            <div class="scale-item good">
+                                <div class="scale-range">0-50</div>
+                                <div class="scale-label">Good</div>
+                            </div>
+                            <div class="scale-item moderate">
+                                <div class="scale-range">51-100</div>
+                                <div class="scale-label">Moderate</div>
+                            </div>
+                            <div class="scale-item unhealthy-sensitive">
+                                <div class="scale-range">101-150</div>
+                                <div class="scale-label">Unhealthy for
+                                    Sensitive</div>
+                            </div>
+                            <div class="scale-item unhealthy">
+                                <div class="scale-range">151-200</div>
+                                <div class="scale-label">Unhealthy</div>
+                            </div>
+                            <div class="scale-item very-unhealthy">
+                                <div class="scale-range">201-300</div>
+                                <div class="scale-label">Very Unhealthy</div>
+                            </div>
+                            <div class="scale-item hazardous">
+                                <div class="scale-range">300+</div>
+                                <div class="scale-label">Hazardous</div>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </main>
 
-                <!-- Info Cards -->
-                <div class="info-cards">
-                    <div class="info-card">
-                        <div class="info-icon">⚡</div>
-                        <div class="info-content">
-                            <div class="info-label">Real-time Data</div>
-                            <div class="info-value">Live Updates</div>
-                        </div>
-                    </div>
-                    <div class="info-card">
-                        <div class="info-icon">🛰️</div>
-                        <div class="info-content">
-                            <div class="info-label">Satellite Data</div>
-                            <div class="info-value">NASA/ISRO</div>
-                        </div>
-                    </div>
-                    <div class="info-card">
-                        <div class="info-icon">📍</div>
-                        <div class="info-content">
-                            <div class="info-label">Coverage</div>
-                            <div class="info-value">India-wide</div>
-                        </div>
-                    </div>
-                    <div class="info-card">
-                        <div class="info-icon">🕐</div>
-                        <div class="info-content">
-                            <div class="info-label">Update Frequency</div>
-                            <div class="info-value">Every 10 min</div>
-                        </div>
+ 
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="container">
+                    <div class="footer-content">
+                        <p>Data provided by World Air Quality Index and
+                            satellite networks</p>
+                        <p>Built with cutting-edge technology for environmental
+                            monitoring</p>
+                        <p class="footer-brand">Divyadrishti - Divine Vision for
+                            Clean Air</p>
                     </div>
                 </div>
+            </footer>
 
-                <!-- AQI Scale Reference -->
-                <div class="aqi-scale-card">
-                    <h3>AQI Scale Reference</h3>
-                    <div class="aqi-scale-grid">
-                        <div class="scale-item good">
-                            <div class="scale-range">0-50</div>
-                            <div class="scale-label">Good</div>
-                        </div>
-                        <div class="scale-item moderate">
-                            <div class="scale-range">51-100</div>
-                            <div class="scale-label">Moderate</div>
-                        </div>
-                        <div class="scale-item unhealthy-sensitive">
-                            <div class="scale-range">101-150</div>
-                            <div class="scale-label">Unhealthy for Sensitive</div>
-                        </div>
-                        <div class="scale-item unhealthy">
-                            <div class="scale-range">151-200</div>
-                            <div class="scale-label">Unhealthy</div>
-                        </div>
-                        <div class="scale-item very-unhealthy">
-                            <div class="scale-range">201-300</div>
-                            <div class="scale-label">Very Unhealthy</div>
-                        </div>
-                        <div class="scale-item hazardous">
-                            <div class="scale-range">300+</div>
-                            <div class="scale-label">Hazardous</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="container">
-                <div class="footer-content">
-                    <p>Data provided by World Air Quality Index and satellite networks</p>
-                    <p>Built with cutting-edge technology for environmental monitoring</p>
-                    <p class="footer-brand">Divyadrishti - Divine Vision for Clean Air</p>
-                </div>
-            </div>
-        </footer>
-
-
-    <script src="my/script.js"></script>
-</body>
-</html>
+            <script src="my/script.js"></script>
+        </body>
+    </html>
